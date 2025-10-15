@@ -1,6 +1,18 @@
 # frozen_string_literal: true
 
 class ApplicationContract
+  module BaseSchema
+    Paginator = Dry::Schema.Params do
+      optional(:page).filled(:integer, gteq?: 1)
+      optional(:size).filled(:integer, lteq?: 100, gteq?: 1)
+    end
+
+    Sorter = Dry::Schema.Params do
+      optional(:sort_by).filled(:symbol)
+      optional(:sort_order).filled(:symbol, included_in?: [:asc, :desc])
+    end
+  end
+
   private_class_method :new
   attr_reader :errors
 

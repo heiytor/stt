@@ -43,3 +43,5 @@ gem "dry-struct"
 gem "dry-types"
 gem "dry-validation"
 gem 'foreman'
+gem 'jsonapi-serializer'
+gem 'kaminari'
