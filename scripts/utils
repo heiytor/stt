@@ -1,0 +1,28 @@
+#!/usr/bin/env sh
+
+set -e
+
+workdir() {
+   cd "$(dirname "$0")/.." && pwd
+}
+
+docker_compose_command() {
+    if /usr/bin/docker compose version --short 2> /dev/null | grep -q "^2\."; then
+        echo "/usr/bin/docker compose"
+    elif /usr/bin/docker-compose version --short 2> /dev/null | grep -q "^2\."; then
+        echo "/usr/bin/docker-compose"
+    else
+        echo >&2 "ERROR: Cannot find Docker Compose compatible with V2 spec"
+        exit 1
+    fi
+}
+
+docker_compose_file() {
+    _workdir="$1"
+    
+    _compose_file="$_workdir/docker-compose.yml"
+    [ -f "$_workdir/docker-compose.override.yml" ] && _compose_file="${_compose_file}:$_workdir/docker-compose.override.yml"
+    
+    echo "$_compose_file"
+    unset _workdir _compose_file
+}

@@ -1,0 +1,13 @@
+#!/bin/sh -e
+
+if [ "$RAILS_ENV" != "production" ]; then
+    if [ -f /rails/tmp/pids/server.pid ]; then
+      rm /rails/tmp/pids/server.pid
+    fi
+
+    ./bin/bundle check || ./bin/bundle install
+fi
+
+./bin/bundle exec rails db:prepare
+
+exec "${@}"

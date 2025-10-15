@@ -1,0 +1,25 @@
+#!/usr/bin/env sh
+
+set -e
+
+# shellcheck source=./utils
+. "$(dirname "$0")/utils"
+
+WORKDIR=$(workdir)
+
+set -o allexport
+[ -f "$WORKDIR/.env" ] && . "$WORKDIR/.env"
+[ -f "$WORKDIR/.env.override" ] && . "$WORKDIR/.env.override"
+set +o allexport
+
+if ! echo "$SEGARANTE_ENVIRONMENT" | grep -Eq "^(development)$"; then
+  echo "Invalid SEGARANTE_ENVIRONMENT: $SEGARANTE_ENVIRONMENT"
+  exit 1
+fi
+
+COMPOSE_COMMAND=$(docker_compose_command)
+COMPOSE_FILE="$(docker_compose_file "$WORKDIR")"
+
+export COMPOSE_FILE
+
+exec $COMPOSE_COMMAND "$@"

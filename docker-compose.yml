@@ -1,0 +1,77 @@
+services:
+    postgres:
+        image: postgres:18
+        container_name: segarante-postgresql
+        healthcheck:
+            test: [ "CMD-SHELL", "pg_isready -U ${SEGARANTE_POSTGRES_USERNAME} -d ${SEGARANTE_POSTGRES_DATABASE}" ]
+            interval: 5s
+            timeout: 5s
+            retries: 5
+        environment:
+            - POSTGRES_USER=${SEGARANTE_POSTGRES_USERNAME}
+            - POSTGRES_PASSWORD=${SEGARANTE_POSTGRES_PASSWORD}
+            - POSTGRES_DB=${SEGARANTE_POSTGRES_DATABASE}
+        volumes:
+            - segarante_postgres:/var/lib/postgresql/data
+        networks:
+            - segarante-network
+    
+    api:
+        image: segarante/api
+        restart: unless-stopped
+        container_name: segarante-api
+        build:
+            target: development
+            context: ./api
+            dockerfile: Dockerfile
+            args:
+                - RAILS_ENV=${SEGARANTE_ENVIRONMENT}
+                - BUNDLE_WITHOUT=
+                - BUNDLE_PATH=/usr/local/bundle
+        environment:
+            - RAILS_ENV=${SEGARANTE_ENVIRONMENT}
+            - POSTGRES_HOST=${SEGARANTE_POSTGRES_HOST}
+            - POSTGRES_PORT=${SEGARANTE_POSTGRES_PORT}
+            - POSTGRES_DATABASE=${SEGARANTE_POSTGRES_DATABASE}
+            - POSTGRES_USERNAME=${SEGARANTE_POSTGRES_USERNAME}
+            - POSTGRES_PASSWORD=${SEGARANTE_POSTGRES_PASSWORD}
+        healthcheck:
+            test: ["CMD", "curl", "-f", "http://localhost:3000/up"]
+            interval: 30s
+            timeout: 3s
+            retries: 3
+        depends_on:
+            postgres:
+                condition: service_healthy
+        volumes:
+            - ./api:/rails
+        networks:
+            - segarante-network
+
+    gateway:
+        image: segarante/gateway
+        container_name: segarante-gateway
+        build:
+            context: ./gateway
+            dockerfile: Dockerfile
+        ports:
+            - "${SEGARANTE_BIND_ADDRESS}:${SEGARANTE_HTTP_PORT}:80"
+        volumes:
+            - ./gateway/nginx.conf:/etc/nginx/nginx.conf
+        healthcheck:
+            test: ["CMD", "curl", "-f", "http://localhost/"]
+            interval: 30s
+            timeout: 3s
+            retries: 3
+        depends_on:
+            api:
+                condition: service_healthy
+        networks:
+            - segarante-network
+
+volumes:
+    segarante_postgres:
+
+networks:
+    segarante-network:
+        driver: bridge
