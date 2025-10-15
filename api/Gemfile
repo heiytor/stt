@@ -39,4 +39,7 @@ group :development, :test do
   gem "rubocop-rails-omakase", require: false
 end
 
+gem "dry-struct"
+gem "dry-types"
+gem "dry-validation"
 gem 'foreman'
