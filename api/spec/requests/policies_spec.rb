@@ -240,13 +240,47 @@ RSpec.describe "Policies API", type: :request do
               "importancia_segurada" => 50_000_000,
               "lmg" => 50_000_000,
               "status" => "ativa",
+              "endorsements_count" => 0,
               "created_at" => policy.created_at.iso8601(3),
               "updated_at" => policy.updated_at.iso8601(3)
+            },
+            "relationships" => {
+              "endorsements" => {
+                "data" => []
+              }
             }
           }
         }
 
         expect(JSON.parse(response.body)).to eq(expected_response)
+      end
+    end
+
+    context "when policy has endorsements" do
+      let!(:policy_with_endorsements) do
+        create(:policy,
+               numero: "01681760574733",
+               data_emissao: Date.parse("2024-10-15"),
+               inicio_vigencia: Date.parse("2024-10-25"),
+               fim_vigencia: Date.parse("2025-10-25"),
+               importancia_segurada: 50_000_000,
+               lmg: 50_000_000)
+      end
+
+      let!(:endorsement1) { create(:endorsement, policy: policy_with_endorsements, data_emissao: Date.parse("2024-11-01"), tipo: Endorsement::Tipo::AUMENTO_IS) }
+      let!(:endorsement2) { create(:endorsement, policy: policy_with_endorsements, data_emissao: Date.parse("2024-11-15"), tipo: Endorsement::Tipo::REDUCAO_IS) }
+
+      before do
+        get "/policies/#{policy_with_endorsements.numero}"
+      end
+
+      it "returns policy with endorsements_count and relationships" do
+        response_data = JSON.parse(response.body)
+
+        expect(response_data["data"]["attributes"]["endorsements_count"]).to eq(2)
+        expect(response_data["data"]["relationships"]["endorsements"]).to be_present
+        expect(response_data["data"]["relationships"]["endorsements"]["data"]).to be_an(Array)
+        expect(response_data["data"]["relationships"]["endorsements"]["data"].size).to eq(2)
       end
     end
   end
