@@ -3,7 +3,7 @@
 module Errors
   class NotFoundError < CustomError
     def initialize(message = "Resource not found")
-      super(message, 404)
+      super(404, message)
     end
   end
 end

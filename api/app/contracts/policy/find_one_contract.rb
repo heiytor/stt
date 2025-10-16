@@ -7,7 +7,7 @@ class Policy::FindOneContract < ApplicationContract
 
   validations do
     params do
-      required(:numero).filled(:string)
+      required(:numero).filled(:string, max_size?: 14)
     end
   end
 end

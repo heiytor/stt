@@ -10,25 +10,31 @@ class Policy::CreateService
 
   # @return [String]
   def call
-    number = loop do
-      attempts ||= 0
-      attempts += 1
-      raise Errors::UnexpectedError.new("Falha ao gerar número único") if attempts > MAXIMUM_ATTEMPTS
-
-      candidate = "#{rand(1..9999).to_s.rjust(4, '0')}#{Time.current.to_i}"
-      conflicts = Policy.find_conflicts(numero: candidate)
-      if conflicts.any?
-        raise Errors::ConflictsError.new("conflicts found", conflicts) if attempts >= MAXIMUM_ATTEMPTS
-        next
-      end
-
-      break candidate
-    end
-
-    policy = Policy.create!(numero: number, data_emissao: @contract.data_emissao, inicio_vigencia: @contract.inicio_vigencia,
+    policy = Policy.create!(numero: generate_number, data_emissao: @contract.data_emissao, inicio_vigencia: @contract.inicio_vigencia,
                             fim_vigencia: @contract.fim_vigencia, importancia_segurada: @contract.importancia_segurada,
                             lmg: @contract.importancia_segurada, status: Policy::Status::ATIVA)
 
-    number
+    Rails.logger.info("Policy with number #{policy.numero} created successfuly")
+    policy.numero
+  end
+
+  private 
+
+  # @return [String]
+  def generate_number
+    attempts = 0
+    loop do
+      attempts += 1
+      raise Errors::UnexpectedError.new("Falha ao gerar número único") if attempts >= MAXIMUM_ATTEMPTS
+
+      candidate = "#{rand(1..9999).to_s.rjust(4, '0')}#{Time.current.to_i}"
+      conflicts = Policy.find_conflicts(numero: candidate)
+      if conflicts.empty?
+        Rails.logger.info("Policy number #{candidate} generated successfully")
+        return candidate
+      end
+
+      Rails.logger.warn("Policy number #{candidate} conflict detected for candidate")
+    end
   end
 end
