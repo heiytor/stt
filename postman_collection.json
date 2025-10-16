@@ -1,0 +1,41 @@
+{
+	"info": {
+		"_postman_id": "7f313056-f38e-4b3d-b48f-f640c5e3d80c",
+		"name": "policies",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "48005408",
+		"_collection_link": "https://heitor-danilo-974887.postman.co/workspace/segarante_techincal_test~8b5eec83-b567-4bab-bdb1-8eb65381e50c/collection/48005408-7f313056-f38e-4b3d-b48f-f640c5e3d80c?action=share&source=collection_link&creator=48005408"
+	},
+	"item": [
+		{
+			"name": "endorsements",
+			"item": []
+		},
+		{
+			"name": "create",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "  {\n    \"data_emissao\": \"2024-10-15\",\n    \"inicio_vigencia\": \"2024-10-25\",\n    \"fim_vigencia\": \"2025-10-25\",\n    \"importancia_segurada\": 50000000\n  }",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{url}}/policies",
+					"host": [
+						"{{url}}"
+					],
+					"path": [
+						"policies"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
