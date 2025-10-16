@@ -1,0 +1,31 @@
+type: object
+properties:
+  data_emissao:
+    type: string
+    format: date
+    description: |
+      Data de emissão da apólice.
+    example: "2024-01-15"
+  inicio_vigencia:
+    type: string
+    format: date
+    description: |
+      Data de início da vigência da apólice. Deve estar no máximo 30 dias da data de emissão.
+    example: "2024-02-01"
+  fim_vigencia:
+    type: string
+    format: date
+    description: |
+      Data de fim da vigência da apólice. Deve ser posterior ao início da vigência.
+    example: "2025-02-01"
+  importancia_segurada:
+    type: integer
+    minimum: 1
+    description: |
+      Importância segurada em centavos. Deve ser maior que zero.
+    example: 10000000
+required:
+  - data_emissao
+  - inicio_vigencia
+  - fim_vigencia
+  - importancia_segurada

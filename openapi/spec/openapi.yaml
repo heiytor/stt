@@ -1,0 +1,36 @@
+openapi: 3.0.3
+info:
+  title: Segarante API
+  description: |
+    Sistema de gerenciamento de apólices de seguro e endossos.
+
+    A API permite o gerenciamento completo de apólices de seguro, incluindo:
+    - Criação e consulta de apólices
+    - Gerenciamento de endossos (alterações nas apólices)
+    - Relacionamentos entre apólices e seus respectivos endossos
+
+    Cada apólice possui informações como datas de vigência, importância segurada
+    e status. Os endossos representam modificações nas apólices, como aumentos/reduções
+    de importância segurada, alterações de vigência ou cancelamentos.
+  version: 1.0.0
+
+servers:
+  - url: http://localhost
+    description: Servidor local de desenvolvimento
+
+tags:
+  - name: Policies
+    description: Gerenciamento de apólices de seguro
+  - name: Endorsements
+    description: Gerenciamento de endossos das apólices
+
+paths:
+  /api/policies:
+    $ref: './paths/policies.yaml'
+  /api/policies/{numero}:
+    $ref: './paths/policies/show.yaml'
+  /api/policies/{numero}/endorsements:
+    $ref: './paths/policies/endorsements.yaml'
+  /api/policies/{numero}/endorsements/{id}:
+    $ref: './paths/policies/endorsements/show.yaml'
+

@@ -1,0 +1,45 @@
+#!/usr/bin/env sh
+set -e
+
+setup() {
+    if [ -d node_modules ]; then
+        echo "info: node_modules encontrado, pulando npm install"
+    else
+        echo "info: node_modules não encontrado, executando npm install"
+        npm install
+
+        if [ $? -ne 0 ]; then
+            echo "erro: falha ao executar npm install, reconstrua a imagem"
+            exit 1
+        fi
+    fi
+}
+
+bundle() {
+    output=$(redocly bundle 'spec/openapi.yaml' -o bundled/openapi.json 2>&1)
+    if [ $? -ne 0 ]; then
+        echo "$output"
+        echo "erro: falha ao gerar bundle do openapi spec"
+        exit 1
+    fi
+
+    echo "info: openapi.json gerado com sucesso"
+}
+
+watch() {
+    echo "info: monitorando mudanças em spec/"
+    while inotifywait -q -r -e close_write "spec/"
+    do
+        bundle
+    done
+}
+
+setup
+bundle
+
+if [ "$NODE_ENV" = "development" ]; then
+    echo "info: modo desenvolvimento - ativando hotreloading"
+    watch &
+fi
+
+npm run serve

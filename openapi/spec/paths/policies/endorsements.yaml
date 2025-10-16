@@ -1,0 +1,82 @@
+get:
+  tags:
+    - Endorsements
+  summary: Listar endossos da apólice
+  description: Retorna uma lista paginada de endossos de uma apólice específica.
+  parameters:
+    - name: numero
+      in: path
+      required: true
+      description: Número da apólice
+      schema:
+        type: string
+        maxLength: 14
+        example: "12345678901234"
+    - name: page
+      in: query
+      description: Número da página
+      schema:
+        type: integer
+        minimum: 1
+        default: 1
+    - name: per_page
+      in: query
+      description: Número de itens por página
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 100
+        default: 25
+  responses:
+    '200':
+      description: Lista de endossos da apólice
+      headers:
+        X-Total-Count:
+          description: Número total de endossos da apólice
+          schema:
+            type: integer
+            example: 5
+      content:
+        application/json:
+          schema:
+            $ref: '../../responses/endorsements/index.yaml'
+    '404':
+      description: Apólice não encontrada
+    '422':
+      description: Parâmetros inválidos
+
+post:
+  tags:
+    - Endorsements
+  summary: Criar novo endosso
+  description: Cria um novo endosso para uma apólice específica.
+  parameters:
+    - name: numero
+      in: path
+      required: true
+      description: Número da apólice
+      schema:
+        type: string
+        maxLength: 14
+        example: "12345678901234"
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: '../../schemas/endorsements/create.yaml'
+  responses:
+    '201':
+      description: Endosso criado com sucesso
+      headers:
+        X-Inserted-Id:
+          description: ID do endosso criado
+          schema:
+            type: integer
+            example: 123
+    '400':
+      description: Dados inválidos
+    '404':
+      description: Apólice não encontrada
+    '422':
+      description: Erro de validação

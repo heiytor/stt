@@ -1,0 +1,61 @@
+get:
+  tags:
+    - Policies
+  summary: Listar apólices
+  description: Retorna uma lista paginada de apólices de seguro.
+  parameters:
+    - name: page
+      in: query
+      description: Número da página
+      schema:
+        type: integer
+        minimum: 1
+        default: 1
+    - name: per_page
+      in: query
+      description: Número de itens por página
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 100
+        default: 25
+  responses:
+    '200':
+      description: Lista de apólices
+      headers:
+        X-Total-Count:
+          description: Número total de apólices
+          schema:
+            type: integer
+            example: 150
+      content:
+        application/json:
+          schema:
+            $ref: '../responses/policies/index.yaml'
+    '422':
+      description: Parâmetros inválidos
+
+post:
+  tags:
+    - Policies
+  summary: Criar nova apólice
+  description: Cria uma nova apólice de seguro no sistema.
+  requestBody:
+    required: true
+    content:
+      application/json:
+        schema:
+          $ref: '../schemas/policies/create.yaml'
+  responses:
+    '201':
+      description: Apólice criada com sucesso
+      headers:
+        X-Inserted-Number:
+          description: Número da apólice criada
+          schema:
+            type: string
+            example: "12345678901234"
+    '400':
+      description: Dados inválidos
+    '422':
+      description: Erro de validação

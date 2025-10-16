@@ -1,0 +1,28 @@
+type: object
+properties:
+  data_emissao:
+    type: string
+    format: date
+    description: |
+      Data de emissão do endosso.
+    example: "2024-03-15"
+  importancia_segurada:
+    type: integer
+    minimum: 1
+    description: |
+      Nova importância segurada em centavos. Opcional para alguns tipos de endosso.
+    example: 12000000
+  inicio_vigencia:
+    type: string
+    format: date
+    description: |
+      Nova data de início da vigência. Opcional para alguns tipos de endosso.
+    example: "2024-04-01"
+  fim_vigencia:
+    type: string
+    format: date
+    description: |
+      Nova data de fim da vigência. Opcional para alguns tipos de endosso. Se informada, deve ser posterior ao início da vigência.
+    example: "2025-04-01"
+required:
+  - data_emissao

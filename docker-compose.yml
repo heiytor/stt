@@ -48,6 +48,25 @@ services:
         networks:
             - segarante-network
 
+    openapi:
+        image: segarante/openapi
+        container_name: segarante-openapi
+        build:
+            context: .
+            dockerfile: ./openapi/Dockerfile
+        restart: unless-stopped
+        environment:
+            - NODE_ENV=${SEGARANTE_ENVIRONMENT}
+        volumes:
+            - ./openapi:/openapi
+        healthcheck:
+            test: "curl -f http://openapi:8080/health || exit 1"
+            interval: 30s
+            start_period: 5s
+            retries: 3
+        networks:
+            - segarante-network
+
     gateway:
         image: segarante/gateway
         container_name: segarante-gateway
@@ -65,6 +84,8 @@ services:
             retries: 3
         depends_on:
             api:
+                condition: service_healthy
+            openapi:
                 condition: service_healthy
         networks:
             - segarante-network

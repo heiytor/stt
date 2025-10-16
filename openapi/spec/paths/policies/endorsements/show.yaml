@@ -1,0 +1,32 @@
+get:
+  tags:
+    - Endorsements
+  summary: Obter endosso específico
+  description: Retorna os detalhes de um endosso específico de uma apólice.
+  parameters:
+    - name: numero
+      in: path
+      required: true
+      description: Número da apólice
+      schema:
+        type: string
+        maxLength: 14
+        example: "12345678901234"
+    - name: id
+      in: path
+      required: true
+      description: ID do endosso
+      schema:
+        type: integer
+        example: 123
+  responses:
+    '200':
+      description: Detalhes do endosso
+      content:
+        application/json:
+          schema:
+            $ref: '../../../responses/endorsements/show.yaml'
+    '404':
+      description: Apólice ou endosso não encontrado
+    '422':
+      description: Parâmetros inválidos

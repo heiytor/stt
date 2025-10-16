@@ -1,0 +1,25 @@
+get:
+  tags:
+    - Policies
+  summary: Obter apólice específica
+  description: Retorna os detalhes de uma apólice específica pelo número.
+  parameters:
+    - name: numero
+      in: path
+      required: true
+      description: Número da apólice (máximo 14 caracteres)
+      schema:
+        type: string
+        maxLength: 14
+        example: "12345678901234"
+  responses:
+    '200':
+      description: Detalhes da apólice
+      content:
+        application/json:
+          schema:
+            $ref: '../../responses/policies/show.yaml'
+    '404':
+      description: Apólice não encontrada
+    '422':
+      description: Parâmetros inválidos

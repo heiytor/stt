@@ -1,0 +1,67 @@
+type: object
+properties:
+  data:
+    type: array
+    items:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: ID único da apólice (UUIDv7)
+          example: "0193c96b-031b-749e-a62a-e01854dac46a"
+        type:
+          type: string
+          enum: [policies]
+          example: "policies"
+        attributes:
+          type: object
+          properties:
+            numero:
+              type: string
+              description: Número da apólice
+              example: "12345678901234"
+            data_emissao:
+              type: string
+              format: date
+              description: Data de emissão da apólice
+              example: "2024-01-15"
+            inicio_vigencia:
+              type: string
+              format: date
+              description: Data de início da vigência
+              example: "2024-02-01"
+            fim_vigencia:
+              type: string
+              format: date
+              description: Data de fim da vigência
+              example: "2025-02-01"
+            importancia_segurada:
+              type: integer
+              description: Importância segurada em centavos
+              example: 10000000
+            lmg:
+              type: integer
+              description: Limite Máximo de Garantia
+              example: 15000000
+            status:
+              type: string
+              enum: [ativa, baixada]
+              description: Status da apólice
+              example: "ativa"
+            endorsements_count:
+              type: integer
+              description: Número de endossos da apólice
+              example: 3
+            created_at:
+              type: string
+              format: date-time
+              description: Data de criação do registro
+              example: "2024-01-15T10:30:00Z"
+            updated_at:
+              type: string
+              format: date-time
+              description: Data de última atualização
+              example: "2024-03-20T14:45:00Z"
+    description: |
+      Lista de apólices de seguro.

@@ -1,0 +1,100 @@
+type: object
+properties:
+  data:
+    type: object
+    properties:
+      id:
+        type: string
+        format: uuid
+        description: ID único do endosso (UUIDv7)
+        example: "0193c96c-0f1a-7c8b-8d2e-a01854dac47b"
+      type:
+        type: string
+        enum: [endorsements]
+        example: "endorsements"
+      attributes:
+        type: object
+        properties:
+          data_emissao:
+            type: string
+            format: date
+            description: Data de emissão do endosso
+            example: "2024-03-15"
+          tipo:
+            type: string
+            enum: [aumento_is, reducao_is, alteracao_vigencia, aumento_is_alteracao_vigencia, reducao_is_alteracao_vigencia, cancelamento]
+            description: Tipo do endosso
+            example: "aumento_is"
+          importancia_segurada:
+            type: integer
+            nullable: true
+            description: Nova importância segurada em centavos
+            example: 12000000
+          inicio_vigencia:
+            type: string
+            format: date
+            nullable: true
+            description: Nova data de início da vigência
+            example: "2024-04-01"
+          fim_vigencia:
+            type: string
+            format: date
+            nullable: true
+            description: Nova data de fim da vigência
+            example: "2025-04-01"
+          created_at:
+            type: string
+            format: date-time
+            description: Data de criação do registro
+            example: "2024-03-15T10:30:00Z"
+          updated_at:
+            type: string
+            format: date-time
+            description: Data de última atualização
+            example: "2024-03-15T10:30:00Z"
+      relationships:
+        type: object
+        properties:
+          policy:
+            type: object
+            properties:
+              data:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    format: uuid
+                    example: "0193c96b-031b-749e-a62a-e01854dac46a"
+                  type:
+                    type: string
+                    enum: [policies]
+          cancelled_endorsement:
+            type: object
+            nullable: true
+            properties:
+              data:
+                type: object
+                nullable: true
+                properties:
+                  id:
+                    type: string
+                    format: uuid
+                    example: "0193c96c-0f1a-7c8b-8d2e-a01854dac47c"
+                  type:
+                    type: string
+                    enum: [endorsements]
+          cancelled_by_endorsement:
+            type: object
+            nullable: true
+            properties:
+              data:
+                type: object
+                nullable: true
+                properties:
+                  id:
+                    type: string
+                    format: uuid
+                    example: "0193c96c-0f1a-7c8b-8d2e-a01854dac47d"
+                  type:
+                    type: string
+                    enum: [endorsements]
