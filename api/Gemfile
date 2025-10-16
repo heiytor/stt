@@ -39,6 +39,15 @@ group :development, :test do
   gem "rubocop-rails-omakase", require: false
 end
 
+group :test do
+  gem "factory_bot"
+  gem "factory_bot_rails"
+  gem "faker"
+  gem "testcontainers-compose"
+  gem "rspec-rails"
+  gem "webmock"
+end
+
 gem "dry-struct"
 gem "dry-types"
 gem "dry-validation"

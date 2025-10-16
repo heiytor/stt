@@ -1,0 +1,10 @@
+services:
+    postgres:
+        image: postgres:18
+        container_name: segarante-postgresql-test
+        environment:
+            - POSTGRES_DB=test
+            - POSTGRES_USER=admin
+            - POSTGRES_PASSWORD=admin
+        ports:
+            - '5432:5432'
